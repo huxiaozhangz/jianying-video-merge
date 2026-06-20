@@ -1,10 +1,10 @@
-# 剪映加密视频解密工具
+# jianying-video-merge
 
-解密剪映 (JianyingPro / CapCut) 导出的被 XOR 0x2b 加密的视频文件，恢复为标准可播放 MP4。
+合并剪映 (JianyingPro / CapCut) 导出的被 XOR 0x2b 加密的视频文件，恢复为标准可播放 MP4。
 
 ## 背景
 
-剪映在渲染导出时，`combination` 目录下会生成被 XOR 0x2b 逐字节加密的 MP4 文件，普通播放器无法读取。本工具对其解密，恢复出完整的标准 MP4。
+剪映在导出预合成片段时，`combination` 目录下会生成被 XOR 0x2b 逐字节加密的 MP4 文件，普通播放器无法读取。本工具对其解密，恢复出完整的标准 MP4。
 
 ### 加密原理
 
@@ -21,56 +21,26 @@
 ### 依赖
 
 - Python 3
-- ffmpeg (仅封装步骤需要，用于添加 faststart)
+- ffmpeg
 
-```bash
-# macOS
-brew install ffmpeg
-
-# Ubuntu/Debian
-sudo apt install ffmpeg
-```
+### 如何导出预合成片段？
+1.全选剪映内所有素材，右键新建复合片段
+2.在复合片段上右键，选择预合成复合片段，等待片段渲染完成，此时预合成片段文件就位于 /工程文件目录/Resources/combination 文件夹内
 
 ### 运行
 
 ```bash
-# 默认解密当前目录下的 video1.mp4
-python3 merge_jianying_videos.py
-
-# 指定文件名
-python3 merge_jianying_videos.py my_video.mp4
+python3 merge_jianying_videos.py 体积较大的视频 体积较小的视频
+e.g. python3 merge_jianying_videos.py video1.mp4 video1_alpha.mp4
 ```
 
-输出文件 `完整视频.mp4` 会生成在当前目录。
+输出文件会生成在当前目录。
 
 ### 输出说明
 
 - 编码格式**跟随原视频** (H.264 / H.265)，使用 `ffmpeg -c copy` 直接复制流，不重新编码
 - 无损、快速
 - 添加 `+faststart` 标志，支持 Web 渐进式播放
-
-## 文件说明
-
-| 文件 | 说明 |
-|------|------|
-| `merge_jianying_videos.py` | 解密脚本 |
-| `video1.mp4` | 输入：剪映加密的主视频 (需要自行放置) |
-| `完整视频.mp4` | 输出：解密后的标准 MP4 |
-
-## 工作流程
-
-```
-1. 读取加密文件，定位加密区域边界 (搜索尾部 bdve box)
-2. 对加密区域逐字节 XOR 0x2b 解密
-3. 验证解密后的 MP4 box 结构 (ftyp / mdat / moov)
-4. ffmpeg -c copy 封装为标准 MP4 (+faststart)
-5. 清理临时文件
-```
-
-## 限制
-
-- 仅适用于 XOR 0x2b 加密方案 (剪映当前版本)
-- 不处理 Alpha 通道合并 (如需带透明度的视频，可自行用 ffmpeg alphamerge 滤镜处理)
 
 ## License
 
