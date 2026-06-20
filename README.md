@@ -30,7 +30,6 @@
 
 ```bash
 python3 merge_jianying_videos.py 体积较大的视频 体积较小的视频
-e.g. python3 merge_jianying_videos.py video1.mp4 video1_alpha.mp4
 ```
 
 输出文件会生成在当前目录。
