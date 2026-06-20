@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.venv/
+venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# 剪映相关
+*.draft
+*.bak
+temp/
+output/
+*.mp4
+*.mov
+*.avi
+
+# OS
+.DS_Store
+Thumbs.db
